@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -15,51 +12,26 @@
     <div id="subject-selection">
         <h2>Lern-Quests</h2>
         <p class="subtitle">Wähle eine Lerneinheit (Klasse 9)</p>
-        <div id="subject-selection">
-        <h2>Lern-Quests</h2>
-        <p class="subtitle">Wähle eine Lerneinheit (Klasse 9)</p>
         
         <div class="subject-section">
             <div class="subject-title">📐 Mathematik</div>
-            <a href="#" target="_blank" class="option-btn subject-btn">🔹 Quadratische Funktionen & Gleichungen</a>
-            <a href="#" target="_blank" class="option-btn subject-btn">🔹 Satz des Pythagoras & Trigonometrie</a>
+            <a href="mathe/funktionen.html" target="_blank" class="option-btn subject-btn">🔹 Quadratische Funktionen & Gleichungen</a>
+            <a href="mathe/geometrie.html" target="_blank" class="option-btn subject-btn">🔹 Satz des Pythagoras & Trigonometrie</a>
         </div>
 
         <div class="subject-section">
             <div class="subject-title">🇬🇧 Englisch</div>
-            <a href="#" target="_blank" class="option-btn subject-btn">🔹 Passiv & Conditional Clauses (If-Sätze)</a>
-            <a href="#" target="_blank" class="option-btn subject-btn">🔹 Advanced Vocabulary & Phrasal Verbs</a>
+            <a href="englisch/grammatik.html" target="_blank" class="option-btn subject-btn">🔹 Passiv & Conditional Clauses (If-Sätze)</a>
+            <a href="englisch/vokabeln.html" target="_blank" class="option-btn subject-btn">🔹 Advanced Vocabulary & Phrasal Verbs</a>
         </div>
 
         <div class="subject-section">
             <div class="subject-title">⏳ Geschichte</div>
-            <a href="#" target="_blank" class="option-btn subject-btn">🔹 Die Weimarer Republik</a>
-            <a href="#" target="_blank" class="option-btn subject-btn">🔹 Der Nationalsozialismus & 2. Weltkrieg</a>
+            <a href="geschichte/weimar.html" target="_blank" class="option-btn subject-btn">🔹 Die Weimarer Republik</a>
+            <a href="geschichte/ww2.html" target="_blank" class="option-btn subject-btn">🔹 Der Nationalsozialismus & 2. Weltkrieg</a>
         </div>
-    </div>
-       
-    </div>
-
-    <div id="quiz-screen" class="hidden">
-        <div class="header">
-            <span id="score-display">Score: 0</span>
-            <span id="hearts-display">❤️❤️❤️</span>
-        </div>
-        <div class="progress-bar"><div id="progress" class="progress"></div></div>
-        <div id="question" class="question">Frage lädt...</div>
-        <div id="options" class="options"></div>
-        <div id="feedback" class="feedback"></div>
-        <button id="next-btn" class="nav-btn hidden" onclick="nextQuestion()">Weiter</button>
-    </div>
-
-    <div id="end-screen" class="hidden">
-        <h2 id="end-title">Auswertung</h2>
-        <p id="end-message" style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.6;"></p>
-        <button class="nav-btn" onclick="resetGame()">Zur Themenübersicht</button>
     </div>
 </div>
 
-<script src="script.js"></script>
 </body>
 </html>
-      
