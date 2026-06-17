@@ -1,9 +1,10 @@
+script>
 <!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Learn Quest</title>
+    <title>Ultimate Learn Quest - Klasse 9</title>
     <style>
         :root {
             --bg-color: #0b0f19;
@@ -25,7 +26,7 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
         .game-container {
@@ -43,11 +44,31 @@
 
         h2 {
             font-size: 1.8rem;
-            margin-bottom: 25px;
+            margin-bottom: 10px;
             background: linear-gradient(45deg, var(--accent-blue), var(--accent-green));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 800;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 25px;
+        }
+
+        .subject-section {
+            text-align: left;
+            margin-bottom: 25px;
+        }
+
+        .subject-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--accent-blue);
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 5px;
         }
 
         .header {
@@ -114,7 +135,6 @@
             transform: translateY(0);
         }
 
-        /* Status-Farben bei Antwort */
         .option-btn.correct-choice {
             background-color: rgba(46, 160, 67, 0.15);
             border-color: var(--correct-color);
@@ -161,10 +181,16 @@
         }
 
         .subject-btn {
-            text-align: center;
-            font-size: 1.1rem;
+            text-align: left;
+            font-size: 1rem;
             background: #1c2538;
             border: 2px solid #30363d;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            width: 100%;
+            display: block;
+            box-sizing: border-box;
         }
 
         @keyframes fadeIn {
@@ -177,11 +203,25 @@
 
 <div class="game-container">
     <div id="subject-selection">
-        <h2>Wähle dein Fach</h2>
-        <div class="options">
-            <button class="option-btn subject-btn" onclick="startGame('mathe')">📐 &nbsp; Mathematik</button>
-            <button class="option-btn subject-btn" onclick="startGame('englisch')">🇬🇧 &nbsp; Englisch</button>
-            <button class="option-btn subject-btn" onclick="startGame('geschichte')">⏳ &nbsp; Geschichte</button>
+        <h2>Lern-Quests</h2>
+        <p class="subtitle">Wähle eine Lerneinheit (Klasse 9)</p>
+        
+        <div class="subject-section">
+            <div class="subject-title">📐 Mathematik</div>
+            <button class="option-btn subject-btn" onclick="startGame('mathe_funktionen')">🔹 Quadratische Funktionen & Gleichungen</button>
+            <button class="option-btn subject-btn" onclick="startGame('mathe_geometrie')">🔹 Satz des Pythagoras & Trigonometrie</button>
+        </div>
+
+        <div class="subject-section">
+            <div class="subject-title">🇬🇧 Englisch</div>
+            <button class="option-btn subject-btn" onclick="startGame('englisch_grammatik')">🔹 Passiv & Conditional Clauses (If-Sätze)</button>
+            <button class="option-btn subject-btn" onclick="startGame('englisch_vokabeln')">🔹 Advanced Vocabulary & Phrasal Verbs</button>
+        </div>
+
+        <div class="subject-section">
+            <div class="subject-title">⏳ Geschichte</div>
+            <button class="option-btn subject-btn" onclick="startGame('geschichte_weimar')">🔹 Die Weimarer Republik</button>
+            <button class="option-btn subject-btn" onclick="startGame('geschichte_ww2')">🔹 Der Nationalsozialismus & 2. Weltkrieg</button>
         </div>
     </div>
 
@@ -200,26 +240,43 @@
     <div id="end-screen" class="hidden">
         <h2 id="end-title">Auswertung</h2>
         <p id="end-message" style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.6;"></p>
-        <button class="nav-btn" onclick="resetGame()">Nochmal spielen</button>
+        <button class="nav-btn" onclick="resetGame()">Zur Themenübersicht</button>
     </div>
 </div>
 
 <script>
+// Erweiterte Fragen-Datenbank sortiert nach Duolingo-Subthemen (Niveau Klasse 9)
 const questionsBank = {
-    mathe: [
-        { q: "Was ist das Ergebnis von 7 × 8?", a: ["54", "56", "62", "48"], c: "56" },
-        { q: "Berechne: 150 − 65", a: ["75", "85", "95", "65"], c: "85" },
-        { q: "Wie nennt man eine natürliche Zahl, die nur durch 1 und sich selbst teilbar ist?", a: ["Gerade Zahl", "Primzahl", "Quadratzahl", "Bruchzahl"], c: "Primzahl" }
+    mathe_funktionen: [
+        { q: "Welche Form hat der Graph einer quadratischen Funktion f(x) = x²?", a: ["Gerade", "Parabel", "Hyperbel", "Kreis"], c: "Parabel" },
+        { q: "Wie lauten die Lösungen der Gleichung x² − 9 = 0?", a: ["x = 3", "x = -3", "x = 3 und x = -3", "Es gibt keine Lösung"], c: "x = 3 und x = -3" },
+        { q: "Was gibt der Scheitelpunkt einer nach oben geöffneten Parabel an?", a: ["Den höchsten Punkt", "Den tiefsten Punkt", "Die Nullstelle", "Den Schnittpunkt mit der y-Achse"], c: "Den tiefsten Punkt" },
+        { q: "Welche Formel nutzt man standardmäßig zum Lösen einer gemischt-quadratischen Gleichung (x² + px + q = 0)?", a: ["Mitternachtsformel", "pq-Formel", "Satz des Thales", "Binomische Formel"], c: "pq-Formel" }
     ],
-    englisch: [
-        { q: "Was bedeutet das englische Wort 'predict' auf Deutsch?", a: ["wiederholen", "vorhersagen", "verbessern", "erinnern"], c: "vorhersagen" },
-        { q: "Welcher Satz steht im 'Present Perfect'?", a: ["I am going to school.", "I have already eaten breakfast.", "I will play football later.", "I watched a movie yesterday."], c: "I have already eaten breakfast." },
-        { q: "Was ist das korrekte Gegenteil von 'heavy'?", a: ["light", "dark", "thin", "soft"], c: "light" }
+    mathe_geometrie: [
+        { q: "Wie lautet die Formel des Satzes von Pythagoras für ein rechtwinkliges Dreieck mit den Katheten a, b und der Hypotenuse c?", a: ["a + b = c", "a² + b² = c²", "a² - b² = c²", "a • b = c²"], c: "a² + b² = c²" },
+        { q: "In einem rechtwinkligen Dreieck ist das Verhältnis von Gegenkathete zu Hypotenuse definiert als...", a: ["Tangens", "Cosinus", "Sinus", "Pythagoras"], c: "Sinus" },
+        { q: "Ein rechtwinkliges Dreieck hat die Katheten a = 3 cm und b = 4 cm. Wie lang ist die Hypotenuse c?", a: "5 cm", a: ["5 cm", "7 cm", "25 cm", "6 cm"], c: "5 cm" }
     ],
-    geschichte: [
-        { q: "In welchem Jahr wurde die Berliner Mauer erbaut?", a: ["1945", "1949", "1961", "1989"], c: "1961" },
-        { q: "Wer war der erste Bundeskanzler der Bundesrepublik Deutschland?", a: ["Willy Brandt", "Konrad Adenauer", "Helmut Kohl", "Ludwig Erhard"], c: "Konrad Adenauer" },
-        { q: "In welchem antiken Land liegen die historischen Wurzeln der Olympischen Spiele?", a: ["Italien", "Ägypten", "Griechenland", "Persien"], c: "Griechenland" }
+    englisch_grammatik: [
+        { q: "Bilde das Passiv: 'The chef cooks the food.'", a: ["The food was cooked by the chef.", "The food is cooked by the chef.", "The food is cooking the chef.", "The food has been cooked."], c: "The food is cooked by the chef." },
+        { q: "Welche Form ist grammatikalisch korrekt für einen If-Clause Typ 2?", a: ["If I have time, I will go.", "If I had time, I would go.", "If I would have time, I went.", "If I had had time, I would have gone."], c: "If I had time, I would go." },
+        { q: "Ergänze sinnvoll: 'If it rains tomorrow, we ... the match.'", a: ["would cancel", "will cancel", "canceled", "canceling"], c: "will cancel" }
+    ],
+    englisch_vokabeln: [
+        { q: "Was bedeutet das Phrasal Verb 'to give up'?", a: ["nachgeben", "aufgeben", "verteilen", "mitbringen"], c: "aufgeben" },
+        { q: "Was ist das korrekte Synonym für 'environment'?", a: ["Development", "Surroundings / Nature", "Government", "Pollution"], c: "Surroundings / Nature" },
+        { q: "Was bedeutet das Wort 'consequence' auf Deutsch?", a: ["Reihenfolge", "Konsequenz / Auswirkung", "Gerechtigkeit", "Zustimmung"], c: "Konsequenz / Auswirkung" }
+    ],
+    geschichte_weimar: [
+        { q: "In welchem Jahr wurde die Weimarer Republik gegründet?", a: ["1914", "1918", "1923", "1933"], c: "1918" },
+        { q: "Welches Ereignis im Jahr 1929 stürzte die Weimarer Republik in eine schwere Krise?", a: ["Der Hitler-Putsch", "Die Weltwirtschaftskrise", "Der Vertrag von Versailles", "Die Ermordung Walther Rathenaus"], c: "Die Weltwirtschaftskrise" },
+        { q: "Wie hieß die erste demokratische Verfassung in Deutschland?", a: ["Grundgesetz", "Weimarer Reichsverfassung", "Paulskirchenverfassung", "Bundesvertrag"], c: "Weimarer Reichsverfassung" }
+    ],
+    geschichte_ww2: [
+        { q: "An welchem genauen Datum begann der Zweite Weltkrieg mit dem Überfall auf Polen?", a: ["1. November 1938", "1. September 1939", "8. Mai 1945", "30. Januar 1933"], c: "1. September 1939" },
+        { q: "Wie wurde die Ernennung Adolf Hitlers zum Reichskanzler am 30. Januar 1933 genannt?", a: ["Machtergreifung", "Gleichschaltung", "Ermächtigungsgesetz", "Münchner Abkommen"], c: "Machtergreifung" },
+        { q: "In welchem Jahr endete der Zweite Weltkrieg in Europa?", a: ["1944", "1945", "1946", "1950"], c: "1945" }
     ]
 };
 
@@ -268,7 +325,6 @@ function checkAnswer(selectedBtn, chosenOption, correctOption) {
     let buttons = document.querySelectorAll(".option-btn");
     buttons.forEach(btn => {
         btn.disabled = true;
-        // Richtige Antwort für den Nutzer direkt visuell aufdecken
         if (btn.innerText === correctOption) {
             btn.classList.add("correct-choice");
         }
@@ -288,10 +344,13 @@ function checkAnswer(selectedBtn, chosenOption, correctOption) {
     }
     
     updateHeader();
-    document.getElementById("next-btn").classList.remove("hidden");
     
+    // Bugfix: Zeige den "Weiter"-Button NUR, wenn der Spieler noch Herzen hat
     if (hearts <= 0) {
+        document.getElementById("next-btn").classList.add("hidden");
         setTimeout(() => endGame(false), 1200);
+    } else {
+        document.getElementById("next-btn").classList.remove("hidden");
     }
 }
 
@@ -300,7 +359,6 @@ function nextQuestion() {
     if (currentQuestionIndex < currentQuestions.length && hearts > 0) {
         showQuestion();
     } else if (hearts > 0) {
-        // Fortschrittsbalken vollmachen bei Abschluss
         document.getElementById("progress").style.width = "100%";
         setTimeout(() => endGame(true), 400);
     }
@@ -320,7 +378,7 @@ function endGame(win) {
     
     if (win) {
         title.innerText = "Quest abgeschlossen! 🏆";
-        msg.innerText = `Großartige Leistung! Du hast alle Fragen gemeistert und dein Punktekonto auf ${score} erhöht.`;
+        msg.innerText = `Großartige Leistung! Du hast alle Fragen dieser Lerneinheit gemeistert und dein Punktekonto auf ${score} erhöht.`;
     } else {
         title.innerText = "Nächster Versuch! 🕹️";
         msg.innerText = "Alle Herzen sind aufgebraucht. Kein Problem – lerne aus den Fehlern und starte einfach eine neue Runde!";
