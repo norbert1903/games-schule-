@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duolingo-Style Lernspiel</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .game-container {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #555;
+        }
+        .progress-bar {
+            height: 12px;
+            background-color: #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .progress {
+            height: 100%;
+            background-color: #58cc02;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .question {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: #3c3c3c;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .option-btn {
+            background-color: white;
+            border: 2px solid #e5e5e5;
+            border-bottom: 4px solid #e5e5e5;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+            color: #4b4b4b;
+            transition: all 0.1s;
+        }
+        .option-btn:hover {
+            background-color: #f7f7f7;
+        }
+        .option-btn:active {
+            border-bottom-width: 2px;
+            transform: translateY(2px);
+        }
+        .feedback {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            height: 30px;
+        }
+        .correct { color: #58cc02; }
+        .wrong { color: #ea2b2b; }
+        .hidden { display: none; }
+        .nav-btn {
+            background-color: #1cb0f6;
+            border: none;
+            border-bottom: 4px solid #1899d6;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .nav-btn:active {
+            border-bottom-width: 2px;
+            transform: translateY(2px);
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <div id="subject-selection">
+        <h2>Wähle dein Fach:</h2>
+        <div class="options">
+            <button class="option-btn" onclick="startGame('mathe')">📐 Mathe</button>
+            <button class="option-btn" onclick="startGame('englisch')">🇬🇧 Englisch</button>
+            <button class="option-btn" onclick="startGame('geschichte')">⏳ Geschichte</button>
+        </div>
+    </div>
+
+    <div id="quiz-screen" class="hidden">
+        <div class="header">
+            <span id="score-display">Punkte: 0</span>
+            <span id="hearts-display">❤️❤️❤️</span>
+        </div>
+        <div class="progress-bar"><div id="progress" class="progress"></div></div>
+        <div id="question" class="question">Frage lädt...</div>
+        <div id="options" class="options"></div>
+        <div id="feedback" class="feedback"></div>
+        <button id="next-btn" class="nav-btn hidden" onclick="nextQuestion()">Weiter</button>
+    </div>
+
+    <div id="end-screen" class="hidden">
+        <h2 id="end-title">Super gemacht!</h2>
+        <p id="end-message"></p>
+        <button class="nav-btn" onclick="resetGame()">Nochmal spielen</button>
+    </div>
+</div>
+
+<script>
+// Fragen-Datenbank
+const questionsBank = {
+    mathe: [
+        { q: "Was ist $7 \times 8$?", a: ["56", "54", "62", "48"], c: "56" },
+        { q: "Berechne: $150 - 65$", a: ["75", "85", "95", "65"], c: "85" },
+        { q: "Wie nennt man eine Zahl, die nur durch 1 und sich selbst teilbar ist?", a: ["Gerade Zahl", "Prinzahl", "Primzahl", "Bruchzahl"], c: "Primzahl" }
+    ],
+    englisch: [
+        { q: "Was heißt 'Hund' auf Englisch?", a: ["Cat", "Bird", "Dog", "Mouse"], c: "Dog" },
+        { q: "In welchem Satz wird das 'Present Perfect' benutzt?", a: ["I go to school.", "I have eaten breakfast.", "I will play football.", "I watched a movie."], c: "I have eaten breakfast." },
+        { q: "Was ist das Gegenteil von 'heavy'?", a: ["light", "dark", "small", "hard"], c: "light" }
+    ],
+    geschichte: [
+        { q: "Wann wurde die Berliner Mauer gebaut?", a: ["1945", "1961", "1989", "1975"], c: "1961" },
+        { q: "Wer war der erste Bundeskanzler der Bundesrepublik Deutschland?", a: ["Willy Brandt", "Helmut Kohl", "Konrad Adenauer", "Otto von Bismarck"], c: "Konrad Adenauer" },
+        { q: "In welchem Land entstanden die ersten Olympischen Spiele der Antike?", a: ["Italien", "Ägypten", "Griechenland", "Spanien"], c: "Griechenland" }
+    ]
+};
+
+let currentQuestions = [];
+let currentQuestionIndex = 0;
+let score = 0;
+let hearts = 3;
+
+function startGame(subject) {
+    currentQuestions = [...questionsBank[subject]];
+    currentQuestionIndex = 0;
+    score = 0;
+    hearts = 3;
+    
+    document.getElementById("subject-selection").classList.add("hidden");
+    document.getElementById("end-screen").classList.add("hidden");
+    document.getElementById("quiz-screen").classList.remove("hidden");
+    
+    updateHeader();
+    showQuestion();
+}
+
+function showQuestion() {
+    document.getElementById("feedback").innerText = "";
+    document.getElementById("next-btn").classList.add("hidden");
+    
+    let currentQ = currentQuestions[currentQuestionIndex];
+    document.getElementById("question").innerText = currentQ.q;
+    
+    // Fortschrittsbalken updaten
+    let progressPercent = (currentQuestionIndex / currentQuestions.length) * 100;
+    document.getElementById("progress").style.width = progressPercent + "%";
+    
+    let optionsDiv = document.getElementById("options");
+    optionsDiv.innerHTML = "";
+    
+    // Antwortbuttons generieren
+    currentQ.a.forEach(option => {
+        let btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.innerText = option;
+        btn.onclick = () => checkAnswer(btn, option, currentQ.c);
+        optionsDiv.appendChild(btn);
+    });
+}
+
+function checkAnswer(selectedBtn, chosenOption, correctOption) {
+    // Buttons deaktivieren, damit man nicht mehrfach klickt
+    let buttons = document.querySelectorAll(".option-btn");
+    buttons.forEach(btn => btn.disabled = true);
+    
+    let feedback = document.getElementById("feedback");
+    
+    if (chosenOption === correctOption) {
+        feedback.innerText = "Richtig! 🎉";
+        feedback.className = "feedback correct";
+        score += 10;
+    } else {
+        feedback.innerText = `Falsch! Richtig war: ${correctOption} 😢`;
+        feedback.className = "feedback wrong";
+        hearts--;
+    }
+    
+    updateHeader();
+    document.getElementById("next-btn").classList.remove("hidden");
+    
+    if (hearts <= 0) {
+        setTimeout(() => endGame(false), 1000);
+    }
+}
+
+function nextQuestion() {
+    currentQuestionIndex++;
+    if (currentQuestionIndex < currentQuestions.length && hearts > 0) {
+        showQuestion();
+    } else if (hearts > 0) {
+        endGame(true);
+    }
+}
+
+function updateHeader() {
+    document.getElementById("score-display").innerText = `Punkte: ${score}`;
+    document.getElementById("hearts-display").innerText = "❤️".repeat(hearts) + "💔".repeat(3 - hearts);
+}
+
+function endGame(win) {
+    document.getElementById("quiz-screen").classList.add("hidden");
+    document.getElementById("end-screen").classList.remove("hidden");
+    
+    let title = document.getElementById("end-title");
+    let msg = document.getElementById("end-message");
+    
+    if (win) {
+        title.innerText = "Level geschafft! 🏆";
+        msg.innerText = `Klasse Leistung! Du hast das Fach erfolgreich beendet und ${score} Punkte gesammelt.`;
+    } else {
+        title.innerText = "Game Over! 🕹️";
+        msg.innerText = "Du hast alle deine Leben verloren. Probiere es einfach noch einmal!";
+    }
+}
+
+function resetGame() {
+    document.getElementById("end-screen").classList.add("hidden");
+    document.getElementById("subject-selection").classList.remove("hidden");
+}
+</script>
+
+</body>
+</html>
