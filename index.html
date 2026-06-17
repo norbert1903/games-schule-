@@ -3,98 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Duolingo-Style Lernspiel</title>
+    <title>Ultimate Learn Quest</title>
     <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #151d30;
+            --accent-blue: #00d2ff;
+            --accent-green: #00f2fe;
+            --correct-color: #2ea043;
+            --wrong-color: #f85149;
+            --text-color: #f0f6fc;
+            --text-secondary: #8b949e;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
+            overflow: hidden;
         }
+
         .game-container {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 
+                        0 0 50px rgba(0, 210, 255, 0.1);
             width: 100%;
-            max-width: 500px;
+            max-width: 480px;
             text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease;
         }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
         .header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 20px;
-            font-weight: bold;
-            color: #555;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
         }
+
+        #score-display {
+            color: var(--accent-blue);
+        }
+
         .progress-bar {
-            height: 12px;
-            background-color: #e0e0e0;
-            border-radius: 6px;
+            height: 8px;
+            background-color: #21262d;
+            border-radius: 99px;
             overflow: hidden;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
+
         .progress {
             height: 100%;
-            background-color: #58cc02;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
             width: 0%;
-            transition: width 0.3s;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         .question {
-            font-size: 1.4rem;
-            margin-bottom: 20px;
-            color: #3c3c3c;
+            font-size: 1.35rem;
+            margin-bottom: 30px;
+            line-height: 1.5;
+            font-weight: 500;
         }
+
         .options {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
         }
+
         .option-btn {
-            background-color: white;
-            border: 2px solid #e5e5e5;
-            border-bottom: 4px solid #e5e5e5;
-            padding: 15px;
-            border-radius: 12px;
+            background-color: #1c2538;
+            border: 2px solid #30363d;
+            padding: 16px 20px;
+            border-radius: 16px;
             font-size: 1rem;
             cursor: pointer;
-            font-weight: bold;
-            color: #4b4b4b;
-            transition: all 0.1s;
+            font-weight: 600;
+            color: var(--text-color);
+            transition: all 0.2s ease;
+            text-align: left;
         }
-        .option-btn:hover {
-            background-color: #f7f7f7;
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--accent-blue);
+            background-color: #222d44;
+            transform: translateY(-2px);
         }
-        .option-btn:active {
-            border-bottom-width: 2px;
-            transform: translateY(2px);
+
+        .option-btn:active:not(:disabled) {
+            transform: translateY(0);
         }
+
+        /* Status-Farben bei Antwort */
+        .option-btn.correct-choice {
+            background-color: rgba(46, 160, 67, 0.15);
+            border-color: var(--correct-color);
+            color: #56d364;
+        }
+
+        .option-btn.wrong-choice {
+            background-color: rgba(248, 81, 73, 0.15);
+            border-color: var(--wrong-color);
+            color: #ff7b72;
+        }
+
         .feedback {
-            margin-top: 20px;
-            font-weight: bold;
+            margin-top: 25px;
+            font-weight: 700;
             font-size: 1.2rem;
-            height: 30px;
+            min-height: 30px;
+            animation: fadeIn 0.3s ease;
         }
-        .correct { color: #58cc02; }
-        .wrong { color: #ea2b2b; }
-        .hidden { display: none; }
+
+        .correct { color: #56d364; }
+        .wrong { color: #ff7b72; }
+        .hidden { display: none !important; }
+
         .nav-btn {
-            background-color: #1cb0f6;
+            background: linear-gradient(45deg, #0052d4, #4364f7, #6fb1fc);
+            background-size: 200% auto;
             border: none;
-            border-bottom: 4px solid #1899d6;
             color: white;
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-weight: bold;
+            padding: 14px 32px;
+            border-radius: 99px;
+            font-weight: 700;
+            font-size: 1rem;
             cursor: pointer;
-            margin-top: 20px;
+            margin-top: 25px;
+            box-shadow: 0 4px 15px rgba(67, 100, 247, 0.4);
+            transition: all 0.3s ease;
         }
-        .nav-btn:active {
-            border-bottom-width: 2px;
-            transform: translateY(2px);
+
+        .nav-btn:hover {
+            background-position: right center;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(67, 100, 247, 0.6);
+        }
+
+        .subject-btn {
+            text-align: center;
+            font-size: 1.1rem;
+            background: #1c2538;
+            border: 2px solid #30363d;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -102,17 +177,17 @@
 
 <div class="game-container">
     <div id="subject-selection">
-        <h2>Wähle dein Fach:</h2>
+        <h2>Wähle dein Fach</h2>
         <div class="options">
-            <button class="option-btn" onclick="startGame('mathe')">📐 Mathe</button>
-            <button class="option-btn" onclick="startGame('englisch')">🇬🇧 Englisch</button>
-            <button class="option-btn" onclick="startGame('geschichte')">⏳ Geschichte</button>
+            <button class="option-btn subject-btn" onclick="startGame('mathe')">📐 &nbsp; Mathematik</button>
+            <button class="option-btn subject-btn" onclick="startGame('englisch')">🇬🇧 &nbsp; Englisch</button>
+            <button class="option-btn subject-btn" onclick="startGame('geschichte')">⏳ &nbsp; Geschichte</button>
         </div>
     </div>
 
     <div id="quiz-screen" class="hidden">
         <div class="header">
-            <span id="score-display">Punkte: 0</span>
+            <span id="score-display">Score: 0</span>
             <span id="hearts-display">❤️❤️❤️</span>
         </div>
         <div class="progress-bar"><div id="progress" class="progress"></div></div>
@@ -123,29 +198,28 @@
     </div>
 
     <div id="end-screen" class="hidden">
-        <h2 id="end-title">Super gemacht!</h2>
-        <p id="end-message"></p>
+        <h2 id="end-title">Auswertung</h2>
+        <p id="end-message" style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.6;"></p>
         <button class="nav-btn" onclick="resetGame()">Nochmal spielen</button>
     </div>
 </div>
 
 <script>
-// Fragen-Datenbank
 const questionsBank = {
     mathe: [
-        { q: "Was ist $7 \times 8$?", a: ["56", "54", "62", "48"], c: "56" },
-        { q: "Berechne: $150 - 65$", a: ["75", "85", "95", "65"], c: "85" },
-        { q: "Wie nennt man eine Zahl, die nur durch 1 und sich selbst teilbar ist?", a: ["Gerade Zahl", "Prinzahl", "Primzahl", "Bruchzahl"], c: "Primzahl" }
+        { q: "Was ist das Ergebnis von 7 × 8?", a: ["54", "56", "62", "48"], c: "56" },
+        { q: "Berechne: 150 − 65", a: ["75", "85", "95", "65"], c: "85" },
+        { q: "Wie nennt man eine natürliche Zahl, die nur durch 1 und sich selbst teilbar ist?", a: ["Gerade Zahl", "Primzahl", "Quadratzahl", "Bruchzahl"], c: "Primzahl" }
     ],
     englisch: [
-        { q: "Was heißt 'Hund' auf Englisch?", a: ["Cat", "Bird", "Dog", "Mouse"], c: "Dog" },
-        { q: "In welchem Satz wird das 'Present Perfect' benutzt?", a: ["I go to school.", "I have eaten breakfast.", "I will play football.", "I watched a movie."], c: "I have eaten breakfast." },
-        { q: "Was ist das Gegenteil von 'heavy'?", a: ["light", "dark", "small", "hard"], c: "light" }
+        { q: "Was bedeutet das englische Wort 'predict' auf Deutsch?", a: ["wiederholen", "vorhersagen", "verbessern", "erinnern"], c: "vorhersagen" },
+        { q: "Welcher Satz steht im 'Present Perfect'?", a: ["I am going to school.", "I have already eaten breakfast.", "I will play football later.", "I watched a movie yesterday."], c: "I have already eaten breakfast." },
+        { q: "Was ist das korrekte Gegenteil von 'heavy'?", a: ["light", "dark", "thin", "soft"], c: "light" }
     ],
     geschichte: [
-        { q: "Wann wurde die Berliner Mauer gebaut?", a: ["1945", "1961", "1989", "1975"], c: "1961" },
-        { q: "Wer war der erste Bundeskanzler der Bundesrepublik Deutschland?", a: ["Willy Brandt", "Helmut Kohl", "Konrad Adenauer", "Otto von Bismarck"], c: "Konrad Adenauer" },
-        { q: "In welchem Land entstanden die ersten Olympischen Spiele der Antike?", a: ["Italien", "Ägypten", "Griechenland", "Spanien"], c: "Griechenland" }
+        { q: "In welchem Jahr wurde die Berliner Mauer erbaut?", a: ["1945", "1949", "1961", "1989"], c: "1961" },
+        { q: "Wer war der erste Bundeskanzler der Bundesrepublik Deutschland?", a: ["Willy Brandt", "Konrad Adenauer", "Helmut Kohl", "Ludwig Erhard"], c: "Konrad Adenauer" },
+        { q: "In welchem antiken Land liegen die historischen Wurzeln der Olympischen Spiele?", a: ["Italien", "Ägypten", "Griechenland", "Persien"], c: "Griechenland" }
     ]
 };
 
@@ -175,14 +249,12 @@ function showQuestion() {
     let currentQ = currentQuestions[currentQuestionIndex];
     document.getElementById("question").innerText = currentQ.q;
     
-    // Fortschrittsbalken updaten
     let progressPercent = (currentQuestionIndex / currentQuestions.length) * 100;
     document.getElementById("progress").style.width = progressPercent + "%";
     
     let optionsDiv = document.getElementById("options");
     optionsDiv.innerHTML = "";
     
-    // Antwortbuttons generieren
     currentQ.a.forEach(option => {
         let btn = document.createElement("button");
         btn.className = "option-btn";
@@ -193,18 +265,24 @@ function showQuestion() {
 }
 
 function checkAnswer(selectedBtn, chosenOption, correctOption) {
-    // Buttons deaktivieren, damit man nicht mehrfach klickt
     let buttons = document.querySelectorAll(".option-btn");
-    buttons.forEach(btn => btn.disabled = true);
+    buttons.forEach(btn => {
+        btn.disabled = true;
+        // Richtige Antwort für den Nutzer direkt visuell aufdecken
+        if (btn.innerText === correctOption) {
+            btn.classList.add("correct-choice");
+        }
+    });
     
     let feedback = document.getElementById("feedback");
     
     if (chosenOption === correctOption) {
-        feedback.innerText = "Richtig! 🎉";
+        feedback.innerText = "Hervorragend! 🎉";
         feedback.className = "feedback correct";
         score += 10;
     } else {
-        feedback.innerText = `Falsch! Richtig war: ${correctOption} 😢`;
+        selectedBtn.classList.add("wrong-choice");
+        feedback.innerText = "Das war leider falsch. 😢";
         feedback.className = "feedback wrong";
         hearts--;
     }
@@ -213,7 +291,7 @@ function checkAnswer(selectedBtn, chosenOption, correctOption) {
     document.getElementById("next-btn").classList.remove("hidden");
     
     if (hearts <= 0) {
-        setTimeout(() => endGame(false), 1000);
+        setTimeout(() => endGame(false), 1200);
     }
 }
 
@@ -222,12 +300,14 @@ function nextQuestion() {
     if (currentQuestionIndex < currentQuestions.length && hearts > 0) {
         showQuestion();
     } else if (hearts > 0) {
-        endGame(true);
+        // Fortschrittsbalken vollmachen bei Abschluss
+        document.getElementById("progress").style.width = "100%";
+        setTimeout(() => endGame(true), 400);
     }
 }
 
 function updateHeader() {
-    document.getElementById("score-display").innerText = `Punkte: ${score}`;
+    document.getElementById("score-display").innerText = `Score: ${score}`;
     document.getElementById("hearts-display").innerText = "❤️".repeat(hearts) + "💔".repeat(3 - hearts);
 }
 
@@ -239,11 +319,11 @@ function endGame(win) {
     let msg = document.getElementById("end-message");
     
     if (win) {
-        title.innerText = "Level geschafft! 🏆";
-        msg.innerText = `Klasse Leistung! Du hast das Fach erfolgreich beendet und ${score} Punkte gesammelt.`;
+        title.innerText = "Quest abgeschlossen! 🏆";
+        msg.innerText = `Großartige Leistung! Du hast alle Fragen gemeistert und dein Punktekonto auf ${score} erhöht.`;
     } else {
-        title.innerText = "Game Over! 🕹️";
-        msg.innerText = "Du hast alle deine Leben verloren. Probiere es einfach noch einmal!";
+        title.innerText = "Nächster Versuch! 🕹️";
+        msg.innerText = "Alle Herzen sind aufgebraucht. Kein Problem – lerne aus den Fehlern und starte einfach eine neue Runde!";
     }
 }
 
@@ -255,3 +335,4 @@ function resetGame() {
 
 </body>
 </html>
+
