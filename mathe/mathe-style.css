@@ -1,0 +1,131 @@
+:root {
+    --bg-color: #0b0f19;
+    --card-bg: #151d30;
+    --accent-blue: #00d2ff;
+    --accent-green: #00f2fe;
+    --correct-color: #2ea043;
+    --wrong-color: #f85149;
+    --text-color: #f0f6fc;
+    --text-secondary: #8b949e;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.game-container {
+    background: var(--card-bg);
+    padding: 40px;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+h2 {
+    font-size: 1.8rem;
+    background: linear-gradient(45deg, var(--accent-blue), var(--accent-green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+#score-display { color: var(--accent-blue); }
+
+.progress-bar {
+    height: 8px;
+    background-color: #21262d;
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+.progress {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+    width: 0%;
+    transition: width 0.4s ease;
+}
+
+.question {
+    font-size: 1.35rem;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.option-btn {
+    background-color: #1c2538;
+    border: 2px solid #30363d;
+    padding: 16px 20px;
+    border-radius: 16px;
+    font-size: 1rem;
+    cursor: pointer;
+    color: var(--text-color);
+    text-align: left;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.option-btn:hover:not(:disabled) {
+    border-color: var(--accent-blue);
+    background-color: #222d44;
+}
+
+.option-btn.correct-choice {
+    background-color: rgba(46, 160, 67, 0.15);
+    border-color: var(--correct-color);
+    color: #56d364;
+}
+
+.option-btn.wrong-choice {
+    background-color: rgba(248, 81, 73, 0.15);
+    border-color: var(--wrong-color);
+    color: #ff7b72;
+}
+
+.feedback {
+    margin-top: 25px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    min-height: 30px;
+}
+
+.correct { color: #56d364; }
+.wrong { color: #ff7b72; }
+.hidden { display: none !important; }
+
+.nav-btn {
+    background: linear-gradient(45deg, #0052d4, #4364f7, #6fb1fc);
+    border: none;
+    color: white;
+    padding: 14px 32px;
+    border-radius: 99px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 25px;
+}
+#end-message { color: var(--text-secondary); font-size: 1.1rem; line-height: 1.6;}
