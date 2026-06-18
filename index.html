@@ -3,35 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Learn Quest - Klasse 9</title>
+    <title>LearnQuest 🎓</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-<div class="game-container">
-    <div id="subject-selection">
-        <h2>Lern-Quests</h2>
-        <p class="subtitle">Wähle eine Lerneinheit (Klasse 9)</p>
-        
-        <div class="subject-section">
-            <div class="subject-title">📐 Mathematik</div>
-            <a href="mathe/funktionen.html" target="_blank" class="option-btn subject-btn">🔹 Quadratische Funktionen & Gleichungen</a>
-            <a href="mathe/geometrie.html" target="_blank" class="option-btn subject-btn">🔹 Satz des Pythagoras & Trigonometrie</a>
+    <!-- SCREEN 1: Welcome -->
+    <div id="screen-welcome" class="screen active">
+        <div class="welcome-bg">
+            <div class="floating-emoji" style="--delay:0s">📚</div>
+            <div class="floating-emoji" style="--delay:0.5s">🧮</div>
+            <div class="floating-emoji" style="--delay:1s">🌍</div>
+            <div class="floating-emoji" style="--delay:1.5s">✏️</div>
+            <div class="floating-emoji" style="--delay:2s">🏆</div>
         </div>
-
-        <div class="subject-section">
-            <div class="subject-title">🇬🇧 Englisch</div>
-            <a href="englisch/grammatik.html" target="_blank" class="option-btn subject-btn">🔹 Passiv & Conditional Clauses (If-Sätze)</a>
-            <a href="englisch/vokabeln.html" target="_blank" class="option-btn subject-btn">🔹 Advanced Vocabulary & Phrasal Verbs</a>
-        </div>
-
-        <div class="subject-section">
-            <div class="subject-title">⏳ Geschichte</div>
-            <a href="geschichte/weimar.html" target="_blank" class="option-btn subject-btn">🔹 Die Weimarer Republik</a>
-            <a href="geschichte/ww2.html" target="_blank" class="option-btn subject-btn">🔹 Der Nationalsozialismus & 2. Weltkrieg</a>
+        <div class="welcome-content">
+            <div class="logo-container">
+                <div class="logo-icon">🎓</div>
+                <h1 class="logo-text">LearnQuest</h1>
+                <p class="logo-subtitle">Lerne spielend. Werde brillant.</p>
+            </div>
+            <div class="welcome-card">
+                <h2>Bereit zum Lernen?</h2>
+                <p>Teste dein Wissen in Mathe, Englisch und Geschichte mit spannenden Quiz-Fragen!</p>
+                <button class="btn-primary btn-pulse" onclick="showSubjectSelect()">
+                    <i class="fas fa-rocket"></i> Jetzt starten!
+                </button>
+            </div>
+            <div class="stats-row">
+                <div class="stat-item">
+                    <span class="stat-number" id="total-score">0</span>
+                    <span class="stat-label">Punkte</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="streak-count">0</span>
+                    <span class="stat-label">🔥 Streak</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="correct-total">0</span>
+                    <span class="stat-label">Richtig</span>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
+    <!-- SCREEN 2: Subject Select -->
+    <div id="screen-subjects" class="screen">
+        <div class="screen-header">
+            <button class="btn-back" onclick="showWelcome()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 class="screen-title">Fach wählen</h2>
+            <div class="xp-badge"><i class="fas fa-star"></i> <span id="header-score">0</span></div>
+        </div>
+        <div class="subjects-grid">
+            <div class="subject-card math" onclick="showTopics('math')">
+                <div class="subject-icon-wrap">
+                    <span class="subject-emoji">🧮</span>
+                </div>
+                <h3>Mathematik</h3>
+                <p>3 Themen verfügbar</p>
+                <div class="subject-topics">
+                    <span>Quadratische Funktionen</span>
+                    <span>Lineare Funktionen</span>
+                    <span>Pythagoras</span>
+                </div>
+                <div class="subject-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+            <div class="subject-card english" onclick="showTopics('english')">
+                <div class="subject-icon-wrap">
+                    <span class="subject-emoji">🇬🇧</span>
+                </div>
+                <h3>Englisch</h3>
+                <p>4 Themen verfügbar</p>
+                <div class="subject-topics">
+                    <span>Present Perfect</span>
+                    <span>Schreiben</span>
+                    <span>Grammatik</span>
+                    <span>Past Participle</span>
+                </div>
+                <div class="subject-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+            <div class="subject-card history" onclick="showTopics('history')">
+                <div class="subject-icon-wrap">
+                    <span class="subject-emoji">🏛️</span>
+                </div>
+                <h3>Geschichte</h3>
+                <p>4 Themen verfügbar</p>
+                <div class="subject-topics">
+                    <span>Weimarer Republik</span>
+                    <span>Goldene 20er</span>
+                    <span>1. Weltkrieg</span>
+                    <span>2. Weltkrieg</span>
+                </div>
+                <div class="subject-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 3: Topic Select -->
+    <div id="screen-topics" class="screen">
+        <div class="screen-header">
+            <button class="btn-back" onclick="showSubjectSelect()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 class="screen-title" id="topic-screen-title">Thema wählen</h2>
+            <div class="xp-badge"><i class="fas fa-star"></i> <span id="header-score-2">0</span></div>
+        </div>
+        <div id="topics-container" class="topics-grid"></div>
+    </div>
+
+    <!-- SCREEN 4: Quiz -->
+    <div id="screen-quiz" class="screen">
+        <div class="quiz-header">
+            <button class="btn-back-quiz" onclick="confirmExit()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <span class="progress-text" id="progress-text">1/5</span>
+            </div>
+            <div class="hearts-container" id="hearts-container">
+                <span class="heart">❤️</span>
+                <span class="heart">❤️</span>
+                <span class="heart">❤️</span>
+            </div>
+        </div>
+
+        <div class="quiz-content">
+            <div class="question-category" id="question-category">Kategorie</div>
+            <div class="question-card">
+                <div class="question-number" id="question-number">Frage 1</div>
+                <h2 class="question-text" id="question-text">Frage wird geladen...</h2>
+            </div>
+            <div class="options-grid" id="options-grid"></div>
+        </div>
+
+        <div class="quiz-footer">
+            <div id="feedback-box" class="feedback-box hidden">
+                <div class="feedback-icon" id="feedback-icon"></div>
+                <div class="feedback-text">
+                    <h3 id="feedback-title"></h3>
+                    <p id="feedback-explanation"></p>
+                </div>
+            </div>
+            <button class="btn-check" id="btn-check" onclick="checkAnswer()" disabled>
+                Antwort prüfen
+            </button>
+        </div>
+    </div>
+
+    <!-- SCREEN 5: Results -->
+    <div id="screen-results" class="screen">
+        <div class="results-container">
+            <div class="results-animation" id="results-animation">🏆</div>
+            <h1 class="results-title" id="results-title">Quiz abgeschlossen!</h1>
+            <p class="results-subtitle" id="results-subtitle"></p>
+
+            <div class="results-stats">
+                <div class="result-stat">
+                    <div class="result-stat-icon">✅</div>
+                    <div class="result-stat-value" id="res-correct">0</div>
+                    <div class="result-stat-label">Richtig</div>
+                </div>
+                <div class="result-stat">
+                    <div class="result-stat-icon">❌</div>
+                    <div class="result-stat-value" id="res-wrong">0</div>
+                    <div class="result-stat-label">Falsch</div>
+                </div>
+                <div class="result-stat">
+                    <div class="result-stat-icon">⭐</div>
+                    <div class="result-stat-value" id="res-xp">0</div>
+                    <div class="result-stat-label">XP verdient</div>
+                </div>
+            </div>
+
+            <div class="results-rating" id="results-rating"></div>
+
+            <div class="results-buttons">
+                <button class="btn-secondary" onclick="showSubjectSelect()">
+                    <i class="fas fa-th"></i> Fächer
+                </button>
+                <button class="btn-primary" onclick="retryQuiz()">
+                    <i class="fas fa-redo"></i> Nochmal
+                </button>
+            </div>
+        </div>
+        <canvas id="confetti-canvas"></canvas>
+    </div>
+
+    <!-- EXIT MODAL -->
+    <div id="exit-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-icon">🚪</div>
+            <h3>Quiz verlassen?</h3>
+            <p>Dein Fortschritt in diesem Quiz geht verloren.</p>
+            <div class="modal-buttons">
+                <button class="btn-secondary" onclick="closeModal()">Weitermachen</button>
+                <button class="btn-danger" onclick="exitQuiz()">Verlassen</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
 </body>
 </html>
